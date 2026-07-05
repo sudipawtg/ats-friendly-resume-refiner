@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-width: 260px;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-accent: #7c3aed;
+  --apple-bg: #f7f7fa;
+  --apple-surface: #ffffff;
+  --apple-label: #12121a;
+  --apple-label-secondary: #64647a;
+  --apple-separator: #e2e2ea;
+}
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply min-h-screen bg-apple-bg text-apple-label font-sans;
+    font-feature-settings: "kern" 1, "liga" 1;
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.07), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(124, 58, 237, 0.05), transparent);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.18);
+  }
+}
+
+@layer components {
+  .logo-mark {
+    background: linear-gradient(145deg, #6366f1 0%, #5b52e8 45%, #7c3aed 100%);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  .logo-wordmark-accent {
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass-card {
+    @apply rounded-apple-xl border border-apple-separator/70 p-6 shadow-apple;
+    background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  }
+
+  .glass-card-interactive {
+    @apply glass-card transition-all duration-200 ease-out hover:shadow-apple-md;
+  }
+
+  .glass-card-interactive:hover {
+    border-color: #c7d2fe;
+  }
+
+  .glass-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-apple border border-apple-separator/80 bg-apple-surface px-4 py-2.5 text-apple-subheadline font-medium text-apple-label shadow-apple transition-all duration-150 hover:border-apple-separator-opaque hover:bg-apple-surface-secondary active:scale-[0.98];
+  }
+
+  .glass-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-apple px-4 py-2.5 text-apple-subheadline font-semibold text-white transition-all duration-150 hover:brightness-105 active:scale-[0.98];
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.28), 0 1px 3px rgba(99, 102, 241, 0.12);
+  }
+
+  .glass-input {
+    @apply w-full rounded-apple border border-apple-separator/80 bg-apple-surface px-3.5 py-2.5 text-apple-body text-apple-label placeholder:text-apple-label-tertiary transition-all duration-150 focus:outline-none;
+  }
+
+  .glass-input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .glass-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-apple-caption font-medium;
+  }
+
+  .glass-badge-teal {
+    @apply inline-flex items-center rounded-full bg-teal-500/10 px-2.5 py-0.5 text-apple-caption font-medium text-apple-teal;
+  }
+
+  .glass-badge-blue {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-apple-caption font-medium;
+    background-color: rgba(99, 102, 241, 0.1);
+    color: #4f46e5;
+  }
+
+  .glass-badge-orange {
+    @apply inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-apple-caption font-medium text-apple-orange;
+  }
+
+  .glass-badge-pink {
+    @apply inline-flex items-center rounded-full bg-red-500/10 px-2.5 py-0.5 text-apple-caption font-medium text-apple-red;
+  }
+
+  .glass-badge-green {
+    @apply inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-apple-caption font-medium text-apple-green;
+  }
+
+  .glass-badge-purple {
+    @apply inline-flex items-center rounded-full bg-violet-500/10 px-2.5 py-0.5 text-apple-caption font-medium;
+    color: #7c3aed;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2.5 rounded-apple px-3 py-2 text-apple-subheadline font-medium text-apple-label-secondary transition-all duration-150 hover:bg-apple-fill hover:text-apple-label;
+  }
+
+  .nav-item-active {
+    @apply flex items-center gap-2.5 rounded-apple px-3 py-2 text-apple-subheadline font-semibold;
+    color: #4f46e5;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(124, 58, 237, 0.06) 100%);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+  }
+
+  .score-ring {
+    @apply flex h-20 w-20 items-center justify-center rounded-full border-[3px] text-apple-title-2 font-semibold;
+    color: #4f46e5;
+    border-color: rgba(129, 140, 248, 0.3);
+    background-color: rgba(99, 102, 241, 0.08);
+  }
+
+  .score-ring-secondary {
+    @apply flex h-20 w-20 items-center justify-center rounded-full border-[3px] text-apple-title-2 font-semibold;
+    color: #7c3aed;
+    border-color: rgba(167, 139, 250, 0.3);
+    background-color: rgba(139, 92, 246, 0.08);
+  }
+
+  .page-header {
+    @apply mb-6;
+  }
+
+  .page-title {
+    @apply text-apple-title-1 tracking-tight text-apple-label;
+  }
+
+  .page-subtitle {
+    @apply mt-1 max-w-xl text-apple-subheadline text-apple-label-secondary;
+  }
+
+  .section-title {
+    @apply text-apple-headline text-apple-label;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-apple-footnote font-medium text-apple-label-secondary;
+  }
+
+  .action-bar {
+    @apply sticky bottom-0 z-20 -mx-2 mt-6 rounded-apple-xl border border-apple-separator/60 p-4 shadow-apple-md backdrop-blur-xl;
+    background-color: rgba(255, 255, 255, 0.92);
+  }
+
+  .stat-card {
+    @apply flex flex-col gap-1 rounded-apple-xl border border-apple-separator/70 p-5 shadow-apple;
+    background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  }
+
+  .stat-value {
+    @apply text-apple-title-1 font-semibold tabular-nums text-apple-label;
+  }
+
+  .stat-label {
+    @apply text-apple-footnote font-medium text-apple-label-secondary;
+  }
+
+  .info-panel {
+    @apply rounded-apple-lg border border-apple-separator/60 bg-apple-surface-secondary p-4;
+  }
+
+  .info-panel-blue {
+    @apply rounded-apple-lg p-4;
+    border: 1px solid #c7d2fe;
+    background-color: #eef2ff;
+  }
+
+  .info-panel-indigo {
+    @apply rounded-apple-lg border border-violet-200 bg-violet-50 p-4;
+  }
+
+  .alert-error {
+    @apply flex items-start gap-2.5 rounded-apple-lg border border-red-200 bg-red-50 p-4 text-apple-subheadline text-apple-red;
+  }
+
+  .dropzone {
+    @apply flex flex-col items-center justify-center rounded-apple-xl border-2 border-dashed border-apple-separator p-12 transition-colors duration-200;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(124, 58, 237, 0.06) 100%);
+  }
+
+  .dropzone-active {
+    border-color: #818cf8;
+    background-color: #eef2ff;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(18, 18, 26, 0.12);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(18, 18, 26, 0.2);
+}

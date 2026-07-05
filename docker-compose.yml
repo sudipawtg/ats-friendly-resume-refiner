@@ -1,0 +1,100 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-resumeforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-use-long-random-secret-in-production}
+      POSTGRES_DB: ${POSTGRES_DB:-resumeforge}
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-resumeforge} -d ${POSTGRES_DB:-resumeforge}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      STORAGE_DIR: /app/storage
+      CORS_ORIGINS: '["http://localhost:3000","http://127.0.0.1:3000"]'
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-resumeforge}:${POSTGRES_PASSWORD:-change-me-use-long-random-secret-in-production}@postgres:5432/${POSTGRES_DB:-resumeforge}
+      DATABASE_USE_ALEMBIC: "true"
+      REDIS_URL: redis://redis:6379/0
+      QUEUE_SERVICE_URL: http://worker:8787
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key-change-me}
+      ASYNC_JOBS_ENABLED: ${ASYNC_JOBS_ENABLED:-true}
+      DEFAULT_TENANT_ID: ${DEFAULT_TENANT_ID:-00000000-0000-0000-0000-000000000001}
+      DEFAULT_TENANT_NAME: ${DEFAULT_TENANT_NAME:-Default Workspace}
+      REQUIRE_API_KEY: ${REQUIRE_API_KEY:-false}
+    volumes:
+      - backend_storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    expose:
+      - "8787"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      BACKEND_URL: http://backend:8000
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key-change-me}
+      QUEUE_PORT: "8787"
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-2}
+    depends_on:
+      backend:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8000/api
+      NEXT_PUBLIC_TENANT_ID: ${DEFAULT_TENANT_ID:-00000000-0000-0000-0000-000000000001}
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  backend_storage:
+  postgres_data:
+  redis_data:

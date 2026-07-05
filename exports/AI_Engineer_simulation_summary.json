@@ -1,0 +1,15 @@
+{
+  "project_id": "08e053ba-80f5-404a-b61d-52f3a2aeaa01",
+  "job_id": "82b06b01-eb8a-477d-b787-8292ee403cda",
+  "status": "completed",
+  "fit_score_before": 90,
+  "ats_score_before": 85,
+  "fit_score_after": 90,
+  "ats_score_after": 85,
+  "changes_count": 2,
+  "exports": {
+    "pdf": "/Users/sudip/Sudip/Sudip/experimentation/auto-resume-maker/exports/AI_Engineer_Tailored_CV.pdf",
+    "zip": "/Users/sudip/Sudip/Sudip/experimentation/auto-resume-maker/exports/AI_Engineer_Tailored_CV.zip",
+    "report": "/Users/sudip/Sudip/Sudip/experimentation/auto-resume-maker/exports/AI_Engineer_ATS_Report.html"
+  }
+}

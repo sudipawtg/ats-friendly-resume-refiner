@@ -1,0 +1,1 @@
+export { CoachChatPanel } from "./CoachChatPanel";

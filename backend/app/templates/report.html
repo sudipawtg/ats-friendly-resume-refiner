@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --label: #1d1d1f;
+      --label-secondary: #6e6e73;
+      --label-tertiary: #aeaeb2;
+      --separator: #d1d1d6;
+      --blue: #007aff;
+      --green: #34c759;
+      --orange: #ff9500;
+      --red: #ff3b30;
+      --indigo: #5856d6;
+      --purple: #af52de;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--label);
+      line-height: 1.47059;
+      min-height: 100vh;
+      padding: 2.5rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--separator);
+    }
+    header h1 {
+      font-size: 2.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--label);
+      margin-bottom: 0.5rem;
+    }
+    header p { color: var(--label-secondary); font-size: 0.9375rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--separator);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .card h2 {
+      font-size: 1.375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--label);
+      margin-bottom: 1rem;
+    }
+    .score-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+    .score-ring {
+      display: flex; align-items: center; justify-content: center;
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 3px solid rgba(0,122,255,0.25);
+      background: rgba(0,122,255,0.06);
+      font-size: 1.375rem; font-weight: 600; color: var(--blue);
+      flex-shrink: 0;
+    }
+    .score-ring.indigo {
+      border-color: rgba(88,86,214,0.25);
+      background: rgba(88,86,214,0.06);
+      color: var(--indigo);
+    }
+    .score-label { font-size: 0.8125rem; color: var(--label-secondary); }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin: 0.2rem;
+    }
+    .badge-green { background: rgba(52,199,89,0.12); color: var(--green); }
+    .badge-orange { background: rgba(255,149,0,0.12); color: var(--orange); }
+    .badge-blue { background: rgba(0,122,255,0.12); color: var(--blue); }
+    ul { padding-left: 1.25rem; }
+    li { margin-bottom: 0.35rem; color: var(--label-secondary); font-size: 0.9375rem; }
+    .section-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--label-secondary);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .diff-block {
+      background: #f2f2f7;
+      border-radius: 8px;
+      padding: 0.875rem;
+      margin: 0.5rem 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8125rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--label);
+    }
+    .diff-original { border-left: 3px solid var(--red); }
+    .diff-proposed { border-left: 3px solid var(--green); }
+    .change-meta { font-size: 0.8125rem; color: var(--label-secondary); margin-top: 0.375rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    footer {
+      text-align: center;
+      padding: 2rem 0 0;
+      color: var(--label-tertiary);
+      font-size: 0.75rem;
+      border-top: 1px solid var(--separator);
+      margin-top: 2rem;
+    }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } body { padding: 1.5rem 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ title }}</h1>
+      <p>Generated {{ generated_at }}</p>
+    </header>
+
+    {% if batch is defined and batch %}
+    <div class="card">
+      <h2>Batch Summary</h2>
+      <p style="font-weight:600;margin-bottom:0.75rem;">{{ batch.name }}</p>
+      <div class="grid-2">
+        <div>Total jobs: <strong>{{ batch.jobs|length }}</strong></div>
+        <div>Status: <span class="badge badge-blue">{{ batch.status }}</span></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% for job in jobs %}
+    <div class="card">
+      <h2>{% if job.job_description %}{{ job.job_description.title or 'Role' }}{% else %}Job Analysis{% endif %}</h2>
+      {% if job.job_description and job.job_description.company %}
+      <p style="color:var(--label-secondary);margin-bottom:1rem;font-size:0.9375rem;">
+        {{ job.job_description.company }}{% if job.job_description.location %} · {{ job.job_description.location }}{% endif %}
+      </p>
+      {% endif %}
+
+      {% if include_fit and job.fit_analysis %}
+      <div class="score-row">
+        <div class="score-ring">{{ job.fit_analysis.overall_fit }}%</div>
+        <div>
+          <strong style="font-size:1.0625rem;">Overall Fit</strong>
+          <p class="score-label">How well your CV matches this role</p>
+        </div>
+      </div>
+      {% if job.fit_analysis.strong_matches %}
+      <p class="section-label">Strong Matches</p>
+      <ul>{% for m in job.fit_analysis.strong_matches %}<li>{{ m }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if job.fit_analysis.recommended_emphasis %}
+      <p class="section-label">Recommended Emphasis</p>
+      <ul>{% for e in job.fit_analysis.recommended_emphasis %}<li>{{ e }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% endif %}
+
+      {% if include_gaps and job.fit_analysis and job.fit_analysis.potential_gaps %}
+      <p class="section-label">Potential Gaps</p>
+      <ul>{% for g in job.fit_analysis.potential_gaps %}<li>{{ g }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      {% if include_ats and job.ats_analysis %}
+      <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--separator);">
+        <div class="score-row">
+          <div class="score-ring indigo">{{ job.ats_analysis.overall_score }}</div>
+          <div>
+            <strong style="font-size:1.0625rem;">ATS Score</strong>
+            <p class="score-label">Applicant Tracking System compatibility</p>
+          </div>
+        </div>
+        {% if job.ats_analysis.keyword_coverage %}
+        <p class="section-label">Keyword Coverage</p>
+        {% for kw in job.ats_analysis.keyword_coverage %}<span class="badge badge-green">{{ kw }}</span>{% endfor %}
+        {% endif %}
+        {% if job.ats_analysis.missing_keywords %}
+        <p class="section-label">Missing Keywords</p>
+        {% for kw in job.ats_analysis.missing_keywords %}<span class="badge badge-orange">{{ kw }}</span>{% endfor %}
+        {% endif %}
+        {% if job.ats_analysis.improvements %}
+        <p class="section-label">Improvements</p>
+        <ul>{% for i in job.ats_analysis.improvements %}<li>{{ i }}</li>{% endfor %}</ul>
+        {% endif %}
+        {% if job.ats_analysis.gaps %}
+        <p class="section-label">ATS Gaps</p>
+        <ul>{% for g in job.ats_analysis.gaps %}<li>{{ g }}</li>{% endfor %}</ul>
+        {% endif %}
+        {% if job.ats_analysis.star_assessment %}
+        <p class="section-label">STAR Assessment</p>
+        <ul>{% for s in job.ats_analysis.star_assessment %}<li>{{ s }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if include_changes and job.changes %}
+      <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--separator);">
+        <h2 style="font-size:1.0625rem;margin-bottom:1rem;">Proposed Changes</h2>
+        {% for change in job.changes %}
+        <div style="margin-bottom:1.25rem;">
+          <span class="badge badge-blue">{{ change.section_path }}</span>
+          <p class="change-meta"><strong>Reason:</strong> {{ change.reason }}</p>
+          <p class="change-meta"><strong>Requirement:</strong> {{ change.job_requirement }}</p>
+          <p class="change-meta"><strong>Evidence:</strong> {{ change.evidence_used }}</p>
+          <p class="section-label" style="color:var(--red);">Original</p>
+          <div class="diff-block diff-original">{{ change.original_text[:2000] }}</div>
+          <p class="section-label" style="color:var(--green);">Proposed</p>
+          <div class="diff-block diff-proposed">{{ change.proposed_text[:2000] }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <footer>
+      ResumeForge — Evidence-first CV tailoring. No credentials are invented.
+    </footer>
+  </div>
+</body>
+</html>
